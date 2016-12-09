@@ -5,19 +5,20 @@ export class QuickdevPropertyObserver {
   constructor(obj, propertyName) {
     this.obj = obj;
     this.propertyName = propertyName;
+    this.realpropertyName = propertyName.substr(1);
   }
 
   getValue() {
-    return this.obj[this.propertyName];
+    return this.obj[this.realpropertyName];
   }
 
   setValue(newValue) {
-    this.obj.update(this.propertyName, newValue);
+    this.obj.update(this.realpropertyName, newValue);
   }
 
   subscribe(context, callable) {
     if (this.addSubscriber(context, callable)) {
-      this.oldValue = this.obj[this.propertyName];
+      this.oldValue = this.obj[this.realpropertyName];
       this.obj.__quickdevObserver__.subscriberAdded();
     }
   }
@@ -45,7 +46,7 @@ function handleChange(source, change) {
     return;
   }
 
-  let observer = objectObserver.observers[propertyName];
+  let observer = objectObserver.observers['_'+propertyName];
   let newValue = object[propertyName];
   if (!observer || newValue === observer.oldValue) {
     return;

@@ -27,6 +27,8 @@ var paths = {
 paths.files = [
   'property-observation.js',
   'observation-adapter.js',
+  'objectset-observation.js',
+  'objectset-repeat-strategy.js',
   'index.js'
 ].map(function(file){
   return paths.root + file;

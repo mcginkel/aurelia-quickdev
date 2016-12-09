@@ -5,7 +5,7 @@
  *                                                         *
  *  file : data.js                                         *
  *                                                         *
- *  � 2005 - 2016 Xebic BV. All rights reserved.           *
+ *  � 2005 - 2014 Xebic BV. All rights reserved.           *
  *                                                         *
  *  No part of this package may be reproduced and/or       *
  *  published by print, photoprint, microfilm, audiotape,  *
@@ -19,6 +19,8 @@
      // module definition function
      // dependencies (foo and bar) are mapped to function parameters
      function ( qdsystem ) {
+
+     //var System = QDSystem;//kees
 
 // Only publish once
 if (System.Namespaces.canImport(this, "System.Data.ComplexType"))
@@ -1628,7 +1630,7 @@ function DataObject()
 							if (name !== tagName)
 							{
 								var val= from[name];
-								if (typeof(val) == "function" && !(name == "$Sid" || name == "$Uid" || name == "$State" || name == "$XS"))
+								if (typeof(val) == "function" && !(name == "$Sid" || name == "$Uid" || name == "$State"))
 								{
 									to[name]= val;
 								}
@@ -1873,8 +1875,7 @@ function DataObject()
 			$Owner : null,
 			$State : ObjectStates.CREATED,
 			$Uid : -1,
-			$Sid : null,
-			$XS : null
+			$Sid : null
 		},
 		statics : {
 			assignTo : DataObject_s_assignTo,
@@ -3218,7 +3219,7 @@ function ObjectSet()
 	function ObjectSet_s_internalizeWithObjects(header, items)
 	{
 		/// <summary>
-		/// Internalize an ObjectSet which's expression already has been parsed into objects.
+		/// Internalize an ObjectSet which's expression already has been parsed iinto objects.
 		/// </summary>
 		/// <param name="header" type="Object">The header object defining the ouline of the ObjectSet.</param>
 		/// <param name="items" type="Object">The items object defining the data of the ObjectSet.</param>
@@ -3734,13 +3735,12 @@ function ObjectSet()
 				k++;
 			}
 
-			// update data object based on state of item
+			// update data object based on state of itm
 			switch (itm[0])
 			{
 			case ObjectStates.UPDATED:
 				// Set id
 				String.assignTo(obj, "$Sid", itm[idAt]);
-			    String.assignTo(obj, "$XS", itm[idAt]);
 				// Set state
 				var k = 0;
 				for (var name in header)
@@ -3799,7 +3799,7 @@ function ObjectSet()
 				}
 
 				// loop over items in set and check whether they are indexed, in which case handle them
-				var idAt = messages ? 4 : 3;
+				var idAt = messages ? 3 : 2;
 				for (var i= 0, j= oset.length; i < j; i++)
 				{
 					var obj= oset[i];
@@ -4345,10 +4345,17 @@ function $implementDataProperties(type, descriptor, setTypes)
 		var proptype = proptypes[name]
 
 		implDesc[name] = proptype.getDefault();
+
 		if (PreReadonlyCompatibilityMode || ! descriptor.PropertyDescriptors[name].Readonly)
 		{
 			implDesc["set" + name] = proptype.IsComplex && ! proptype.IsSet ? new DataObject.$ComplexPropertySetter(name, proptype) : new DataObject.$PropertySetter(name);
 		}
+
+        Object.defineProperty(type.prototype, '_'+name, {
+            enumerable : true,
+            set : new Function('v','this.update("'+name+'",v);'),
+            get : new Function('return this["'+name+'"];')
+        });
 
 		if (proptype.IsSet)
 		{
@@ -5122,10 +5129,6 @@ function DataInternalizer()
 						if (name == "$Sid")
 						{
 							String.assignTo(result, name, data[i]);
-						}
-						else if (name == "$XS")
-						{
-						    String.assignTo(result, name, data[i]);
 						}
 
 						i++;

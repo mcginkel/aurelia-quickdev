@@ -18,7 +18,7 @@ function createCanObserveLookup(complexType) {
   let propertyNames = complexType.PropertyNames;
   if (propertyNames){
       for (let i = 0, ii = propertyNames.length; i < ii; i++) {
-        let property = propertyNames[i];
+        let property = '_'+propertyNames[i];
 
         // determine whether the adapter should handle the property...
         // all combinations of navigation/data properties * scalar/non-scalar properties are handled EXCEPT

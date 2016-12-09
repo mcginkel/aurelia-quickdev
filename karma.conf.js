@@ -14,7 +14,16 @@ module.exports = function(config) {
 
     jspm: {
       // Edit this to your needs
-      loadFiles: ['src/**/*.js', 'test/observation-adapter.spec.js','quickdev/**/*.js']
+      loadFiles: [
+          'test/setup.js'
+          ,'src/property-observation.js'
+          ,'src/observation-adapter.js'
+          ,'src/objectset-repeat-strategy.js'
+          ,'src/index.js'
+          ,'test/mocks.js'
+          ,'test/observation-adapter.spec.js'
+          ,'test/objectset-repeat-strategy.spec.js'
+          ,'quickdev/**/*.js']
     },
 
 

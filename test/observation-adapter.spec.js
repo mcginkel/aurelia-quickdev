@@ -25,8 +25,8 @@ describe('quickdev observation adapter', function() {
   it('handles properties of a Complex Type', () => {
     var adapter = new QuickdevObservationAdapter(),
         entity = new Human();
-    expect(adapter.getObserver(entity, 'Id')).not.toBe(null);
-    expect(adapter.getObserver(entity, 'Name')).not.toBe(null);
+    expect(adapter.getObserver(entity, '_Id')).not.toBe(null);
+    expect(adapter.getObserver(entity, '_Name')).not.toBe(null);
   });
 
   it('ignores entity properties that are not observable', () => {
@@ -50,50 +50,11 @@ describe('quickdev observation adapter', function() {
     expect(adapter.getObserver(entity, 'foo')).toBe(null);
   });
 
-/*
-  it('handles Quickdev complex properties', () => {
-    var adapter = new BreezeObservationAdapter(),
-      member = entityManager.createEntity(memberType, {
-        memberId: 1,
-        id: 1
-      }),
-      repository = entityManager.createEntity(repositoryType, {
-        id: 'aurelia/binding',
-        memberId: 1
-      });
-
-    expect(repository.member).toBeDefined();
-    var descriptor = Object.getPropertyDescriptor(repository, 'member');
-    expect(descriptor).toBeDefined();
-
-    expect(adapter.getObserver(repository, 'member')).not.toBe(null);
-  });
-
-  it('handles non-scalar data properties', () => {
-    var adapter = new BreezeObservationAdapter(),
-      member = entityManager.createEntity(memberType, {
-        memberId: 1,
-        id: 1
-      }),
-      repository = entityManager.createEntity(repositoryType, {
-        id: 'aurelia/binding',
-        memberId: 1,
-        files: ['breeze.js', 'aurelia.js']
-      });
-
-    expect(repository.files).toBeDefined();
-    var descriptor = Object.getPropertyDescriptor(repository, 'files');
-    expect(descriptor).toBeDefined();
-
-    expect(adapter.getObserver(repository, 'files')).not.toBe(null);
-  });
-
-*/
   it('returns observer matching property-observer interface', () => {
     var adapter = new QuickdevObservationAdapter(),
       entity = new Human(),
-      observer = adapter.getObserver(entity, 'Id');
-    expect(observer.propertyName).toBe('Id');
+      observer = adapter.getObserver(entity, '_Id');
+    expect(observer.propertyName).toBe('_Id');
     expect(Object.prototype.toString.call(observer.getValue)).toBe('[object Function]');
     expect(Object.prototype.toString.call(observer.setValue)).toBe('[object Function]');
     expect(Object.prototype.toString.call(observer.subscribe)).toBe('[object Function]');
@@ -103,8 +64,8 @@ describe('quickdev observation adapter', function() {
   it('reuses property observers', () => {
     var adapter = new QuickdevObservationAdapter(),
         entity = new Human(),
-      observer1 = adapter.getObserver(entity, 'Id'),
-      observer2 = adapter.getObserver(entity, 'Id');
+      observer1 = adapter.getObserver(entity, '_Id'),
+      observer2 = adapter.getObserver(entity, '_Id');
     expect(observer1).toBe(observer2);
   });
 });
@@ -121,8 +82,8 @@ describe('Complex Object observation', function() {
 
     adapter = new QuickdevObservationAdapter(),
     entity = new Human(),
-    idObserver = adapter.getObserver(entity, 'Id'),
-    nameObserver = adapter.getObserver(entity, 'Name');
+    idObserver = adapter.getObserver(entity, '_Id'),
+    nameObserver = adapter.getObserver(entity, '_Name');
   });
 
   it('gets and sets value', () => {
@@ -225,6 +186,6 @@ it('subscribes to changes', () => {
     change = null;
     nameObserver.setValue('baz');
     expect(change && change.newValue === 'baz' && change.oldValue === 'bar').toBe(true);
-    
+
   });
 });
